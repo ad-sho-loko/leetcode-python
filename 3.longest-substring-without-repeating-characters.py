@@ -1,20 +1,15 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        if len(s) == 0:
-            return 0
+        start = 0
+        memo = {}
+        mx = 0
 
-        m = {}
-        si = 0
-        ei = 0
-        mx = -1
+        for i, ch in enumerate(s):
+            if ch in memo:
+                start = max(memo[ch] + 1, start)
 
-        while ei < len(s):
-            if s[ei] in m:
-                si = max(m[s[ei]], si)
-
-            m[s[ei]] = ei
-            ei += 1
-            mx = max(mx, ei - si)
+            mx = max(mx, i - start + 1)
+            memo[ch] = i
 
         return mx
 
