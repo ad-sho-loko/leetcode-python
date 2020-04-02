@@ -1,4 +1,7 @@
 class Solution:
+    # n段目の答えはn-1段目とn-2段目の答えの加算になること
+    # 0,1,2段目は答えが確定していること
+    # 上記を利用できるかがポイント
     def climbStairs(self, n: int) -> int:
         if n == 1:
             return 1
