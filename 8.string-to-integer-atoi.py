@@ -1,31 +1,34 @@
 class Solution:
     def myAtoi(self, str: str) -> int:
-        digit_str = str.lstrip()
-        isNeg = False
-        if len(digit_str) == 0:
+        str = str.lstrip()
+        if len(str) == 0:
             return 0
 
-        if digit_str[0] == "+":
-            digit_str = digit_str[1:]
-        elif digit_str[0] == "-":
-            digit_str = digit_str[1:]
+        isNeg = False
+        if str[0] == "+":
+            str = str[1:]
+        elif str[0] == "-":
+            str = str[1:]
             isNeg = True
 
+        if len(str) == 0 or not str[0].isdigit():
+            return 0
+
         ans = 0
-        for i in range(len(digit_str)):
-            if not digit_str[i].isdigit():
+        for ch in str:
+            if not ch.isdigit():
                 break
 
-            ans = ans * 10 + int(digit_str[i])
+            ans = ans * 10 + int(ch)
 
-            # check overflow/underflow
-            if ans >= 2 ** 31:
-                if isNeg:
-                    return -2 ** 31
-                else:
-                    return 2 ** 31 - 1
+            if ans >= 2 ** 31 and isNeg:
+                return -(ans ** 31)
+
+            if ans >= 2 ** 31 - 1 and not isNeg:
+                return ans ** 31 - 1
+
 
         if isNeg:
-            ans = -ans
+            return -ans
 
         return ans
