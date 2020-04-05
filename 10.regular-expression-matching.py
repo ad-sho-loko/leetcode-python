@@ -1,29 +1,20 @@
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
-        return self.inner(s, p, 0, 0)
+        dp = [[False for _ in range(len(p) + 1)] for _ in range(len(s) + 1)]
+        dp[0][0] = True
 
-    def inner(self, s: str, p: str, si: int, pi: int):
-        while si < len(s) and pi < len(p):
-            if pi + 1 < len(p):
-                if p[pi + 1] == "*":
-                    if self.star(s, p, si, pi):
-                        return True
+        for j in range(1, len(p) + 1):
+            pi = j - 1
+            dp[0][j] = p[pi] == "*" and dp[0][j-2]
 
-            if p[pi] != "." and s[si] != p[pi]:
-                return False
+        for i in range(1, len(s) + 1):
+            for j in range(1, len(p) + 1):
+                si = i - 1
+                pi = j - 1
 
-            si += 1
-            pi += 1
+                if p[pi] == "*":
+                    dp[i][j] = dp[i][j-2] or ((s[si] == p[pi-1] or p[pi-1] == ".") and dp[i-1][j])
+                else:
+                    dp[i][j] = dp[i-1][j-1] and (s[si] == p[pi] or p[pi] == ".")
 
-        while pi + 1 < len(p):
-            pi += 2
-
-        return si == len(s) and pi == len(p)
-
-    def star(self, s: str, p: str, si: int, pi: int):
-        while si < len(s) and (p[pi] == "." or s[si] == p[pi]):
-            if self.inner(s, p, si, pi + 2):
-                return True
-            si += 1
-
-        return self.inner(s, p, si, pi + 2)
+        return dp[len(s)][len(p)]
