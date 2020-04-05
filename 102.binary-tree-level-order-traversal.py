@@ -25,7 +25,7 @@ class Solution:
             dfs(depth + 1, node.left)
             dfs(depth + 1, node.right)
 
-        if root is None:
+        if not root:
             return []
 
         dfs(0, root)
