@@ -35,3 +35,30 @@ class Solution:
             return max(visited)
         else:
             return -1
+
+    # ベルマンフォード法による解法。
+    def networkDelayTime2(self, times: List[List[int]], N: int, K: int) -> int:
+        dist = [999 for _ in range(N)]
+        graph = [[-1 for _ in range(N)] for _ in range(N)]
+        for t in times:
+            frm, to, cost = t[0]-1, t[1]-1, t[2]
+            graph[frm][to] = cost
+
+        # 開始点の距離をゼロ初期化することを忘れないこと
+        dist[K-1] = 0
+
+        for i in range(N):          # ループ
+            for j in range(N):      # from
+                for k in range(N):  # to
+                    if j == k:
+                        continue
+
+                    cost = graph[j][k]
+                    if cost != -1 and dist[k] > dist[j] + cost:
+                        dist[k] = dist[j] + cost
+
+        for d in dist:
+            if d == 999:
+                return -1
+
+        return max(dist)
