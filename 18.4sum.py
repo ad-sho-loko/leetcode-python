@@ -3,32 +3,40 @@ class List:
         pass
 
 class Solution:
+    answer = []
+
+    def two_sum(self, nums: List[int], target: int, f, s):
+        l = 0
+        r = len(nums) - 1
+
+        while l < r:
+            if nums[l] + nums[r] == target:
+                return self.answer.append((f, s, nums[l], nums[r]))
+
+            while l+1 < len(nums) and nums[l] == nums[l+1]:
+                l+=1
+
+            while r-1 >= 0 and nums[r] == nums[r-1]:
+                r-=1
+
+            l+=1
+            r-=1
+
+    def solve(self, nums, target, f, s, N):
+        if N == 2:
+            return self.two_sum(nums, target, f, s)
+
+        if N == 3:
+            for i, n in enumerate(nums):
+                self.solve(nums[i:], target - n, f, n, N - 1)
+
+        if N == 4:
+            for i, n in enumerate(nums):
+                self.solve(nums[i:], target - n, n, s, N - 1)
+
+
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
-        sort_nums = sorted(nums)
-        length = len(nums)
-        ans = []
-
-        for i in range(length-3):
-            for j in range(i+1, length-2):
-                left = j + 1
-                right = length - 1
-                while left < right:
-                    total = sort_nums[i] + sort_nums[j] + sort_nums[left] + sort_nums[right]
-
-                    if total == target:
-                        ans.append([sort_nums[i], sort_nums[j], sort_nums[left], sort_nums[right]])
-
-                        left += 1
-                        right -= 1
-
-                        while left < right and sort_nums[left] == sort_nums[left-1] :
-                            left += 1
-                        while left < right and sort_nums[right] == sort_nums[right+1] :
-                            right -= 1
-
-                    elif total > target:
-                        right -= 1
-                    else:
-                        left += 1
-
-        return ans
+        self.answer = []
+        sorted(nums)
+        self.solve(nums, target, -1, -1, 4)
+        return self.answer
